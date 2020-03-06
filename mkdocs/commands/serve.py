@@ -2,6 +2,7 @@ import logging
 import shutil
 import tempfile
 import sys
+import webbrowser
 
 from os.path import isfile, join
 from mkdocs.commands.build import build
@@ -103,7 +104,7 @@ def _static_server(host, port, site_dir):
 
 
 def serve(config_file=None, dev_addr=None, strict=None, theme=None,
-          theme_dir=None, livereload='livereload', **kwargs):
+          theme_dir=None, livereload='livereload', open_browser=None, **kwargs):
     """
     Start the MkDocs development server
 
@@ -126,6 +127,7 @@ def serve(config_file=None, dev_addr=None, strict=None, theme=None,
             theme=theme,
             theme_dir=theme_dir,
             site_dir=site_dir,
+            open_browser=open_browser,
             **kwargs
         )
         # Override a few config settings after validation
@@ -142,6 +144,8 @@ def serve(config_file=None, dev_addr=None, strict=None, theme=None,
 
         host, port = config['dev_addr']
 
+        if config.get('open_browser'):
+            webbrowser.open(config['site_url'], new=2, autoraise=True)
         if livereload in ['livereload', 'dirty']:
             _livereload(host, port, config, builder, site_dir)
         else:

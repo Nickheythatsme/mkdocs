@@ -53,6 +53,7 @@ site_dir_help = "The directory to output the result of the documentation build."
 use_directory_urls_help = "Use directory URLs when building pages (the default)."
 reload_help = "Enable the live reloading in the development server (this is the default)"
 no_reload_help = "Disable the live reloading in the development server."
+open_browser_help = "Enable automatically opening the browser when serving documents."
 dirty_reload_help = "Enable the live reloading in the development server, but only re-build files that have changed"
 commit_message_help = ("A commit message to use when committing to the "
                        "Github Pages remote branch. Commit {sha} and MkDocs {version} are available as expansions")
@@ -129,9 +130,10 @@ def cli():
 @click.option('--livereload', 'livereload', flag_value='livereload', help=reload_help, default=True)
 @click.option('--no-livereload', 'livereload', flag_value='no-livereload', help=no_reload_help)
 @click.option('--dirtyreload', 'livereload', flag_value='dirty', help=dirty_reload_help)
+@click.option('-o', '--open-browser', 'open_browser', flag_value=True, help=open_browser_help, default=False)
 @common_config_options
 @common_options
-def serve_command(dev_addr, livereload, **kwargs):
+def serve_command(dev_addr, livereload, open_browser, **kwargs):
     """Run the builtin development server"""
 
     logging.getLogger('tornado').setLevel(logging.WARNING)
@@ -140,6 +142,7 @@ def serve_command(dev_addr, livereload, **kwargs):
         serve.serve(
             dev_addr=dev_addr,
             livereload=livereload,
+            open_browser=open_browser,
             **kwargs
         )
     except (exceptions.ConfigurationError, OSError) as e:  # pragma: no cover
